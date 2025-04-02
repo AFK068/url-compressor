@@ -4,14 +4,13 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/AFK068/compressor/internal/config"
 	"github.com/golang-migrate/migrate/v4"
 	"go.uber.org/zap"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres" //nolint
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/jackc/pgx/v5"
-
-	"github.com/AFK068/compressor/internal/config"
 )
 
 func RunMigration(cfg *config.Config, log *zap.Logger) error {
