@@ -45,7 +45,7 @@ func (s *Shortener) Encode(num uint64) (string, error) {
 
 func (s *Shortener) Decode(str string) (uint64, error) {
 	if uint64(len(str)) != s.Length {
-		return 0, ErrInvalidLength
+		return 0, ErrInvalidDecoderLength
 	}
 
 	var num uint64
