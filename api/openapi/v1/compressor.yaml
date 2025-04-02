@@ -20,11 +20,7 @@ paths:
           description: Url successfully retrieved
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  url:
-                    type: string
+              $ref: '#/components/schemas/UrlResponse'
         '400':
           description: Bad request
           content:
@@ -44,11 +40,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                url:
-                  type: string
-                  format: uri
+              $ref: '#/components/schemas/UrlResponse'
       responses:
         '200':
           description: Url successfully saved
@@ -74,14 +66,17 @@ paths:
           
 components:
   schemas:
+    UrlResponse:
+      type: object
+      properties:
+        url:
+          type: string
     ApiErrorResponse:
       type: object
       properties:
         description:
           type: string
         code:
-          type: string
-        exceptionName:
           type: string
         exceptionMessage:
           type: string

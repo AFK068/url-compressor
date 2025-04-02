@@ -16,7 +16,11 @@ type ApiErrorResponse struct {
 	Code             *string `json:"code,omitempty"`
 	Description      *string `json:"description,omitempty"`
 	ExceptionMessage *string `json:"exceptionMessage,omitempty"`
-	ExceptionName    *string `json:"exceptionName,omitempty"`
+}
+
+// UrlResponse defines model for UrlResponse.
+type UrlResponse struct {
+	Url *string `json:"url,omitempty"`
 }
 
 // GetUrlParams defines parameters for GetUrl.
@@ -24,13 +28,8 @@ type GetUrlParams struct {
 	ShortUrl string `form:"short-url" json:"short-url"`
 }
 
-// PostUrlJSONBody defines parameters for PostUrl.
-type PostUrlJSONBody struct {
-	Url *string `json:"url,omitempty"`
-}
-
 // PostUrlJSONRequestBody defines body for PostUrl for application/json ContentType.
-type PostUrlJSONRequestBody PostUrlJSONBody
+type PostUrlJSONRequestBody = UrlResponse
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
