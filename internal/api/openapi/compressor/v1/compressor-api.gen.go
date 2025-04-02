@@ -11,6 +11,11 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
+// AddUrlRequest defines model for AddUrlRequest.
+type AddUrlRequest struct {
+	Url *string `json:"url,omitempty"`
+}
+
 // ApiErrorResponse defines model for ApiErrorResponse.
 type ApiErrorResponse struct {
 	Code             *string `json:"code,omitempty"`
@@ -29,7 +34,7 @@ type GetUrlParams struct {
 }
 
 // PostUrlJSONRequestBody defines body for PostUrl for application/json ContentType.
-type PostUrlJSONRequestBody = UrlResponse
+type PostUrlJSONRequestBody = AddUrlRequest
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {

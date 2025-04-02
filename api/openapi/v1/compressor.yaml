@@ -20,7 +20,8 @@ paths:
           description: Url successfully retrieved
           content:
             application/json:
-              $ref: '#/components/schemas/UrlResponse'
+              schema:
+                $ref: '#/components/schemas/UrlResponse'
         '400':
           description: Bad request
           content:
@@ -40,17 +41,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UrlResponse'
+              $ref: '#/components/schemas/AddUrlRequest'
       responses:
         '200':
           description: Url successfully saved
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  shortUrl:
-                    type: string
+                $ref: '#/components/schemas/UrlResponse'
         '400':
           description: Bad request
           content:
@@ -67,6 +65,11 @@ paths:
 components:
   schemas:
     UrlResponse:
+      type: object
+      properties:
+        url:
+          type: string
+    AddUrlRequest:
       type: object
       properties:
         url:
