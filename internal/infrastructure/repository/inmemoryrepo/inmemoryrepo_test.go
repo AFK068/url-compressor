@@ -100,16 +100,3 @@ func Test_GetURL_URLNotFound_Failure(t *testing.T) {
 
 	shortenerMock.AssertExpectations(t)
 }
-
-func Test_GetURL_RepoIsFull_Failure(t *testing.T) {
-	shortenerMock := shortenermock.NewShortener(t)
-	repo := inmemoryrepo.New(shortenerMock, 1)
-
-	shortenerMock.On("Decode", "shortenedURL").Return(uint64(10), nil).Once()
-
-	_, err := repo.GetURL(context.Background(), "shortenedURL")
-	assert.IsType(t, &apperrors.ErrRepositoryIsFull{}, err)
-	assert.Error(t, err)
-
-	shortenerMock.AssertExpectations(t)
-}

@@ -49,7 +49,7 @@ func (r *InMemoryRepository) GetURL(_ context.Context, shortenedURL string) (str
 	}
 
 	if id >= uint64(len(r.urls)) {
-		return "", &apperrors.ErrRepositoryIsFull{Message: "repository is full"}
+		return "", &apperrors.ErrURLNotFound{Message: "url not found"}
 	}
 
 	r.mu.Lock()
