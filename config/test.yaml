@@ -1,0 +1,9 @@
+storage:
+    type: "postgres"
+    host: "localhost"
+    port: "5432"
+    database_name: "scrapper"
+    user: "postgres"
+    password: "password"
+migrations:
+    migrations_path: "../../../../migrations/changesets"
