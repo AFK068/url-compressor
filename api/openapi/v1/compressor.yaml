@@ -28,8 +28,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-        '500':
-          description: Internal server error
+        '404':
+          description: Url not found
           content:
             application/json:
               schema:
@@ -54,13 +54,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiErrorResponse'      
+                $ref: '#/components/schemas/ApiErrorResponse'  
           
 components:
   schemas:
