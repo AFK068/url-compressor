@@ -6,6 +6,7 @@ import (
 
 	"github.com/AFK068/compressor/internal/domain"
 	"github.com/AFK068/compressor/internal/domain/apperrors"
+
 	rbt "github.com/emirpasic/gods/trees/redblacktree"
 )
 
