@@ -10,10 +10,12 @@ import (
 type Config struct {
 	Storage   Storage   `yaml:"storage" env-required:"true"`
 	Migration Migration `yaml:"migrations" env-required:"true"`
+	Shortener Shortener `yaml:"shortener" env-required:"true"`
 }
 
 type Storage struct {
-	Type         domain.RepositoryType `yaml:"type" env:"STORAGE_TYPE" env-required:"true" env-default:"sql"`
+	Type         domain.RepositoryType `yaml:"type" env:"STORAGE_TYPE" env-default:"postgres"`
+	MaxSize      uint64                `yaml:"max_size" env:"MAX_SIZE" env-default:"100"`
 	Host         string                `yaml:"host" env:"POSTGRES_HOST" env-required:"true"`
 	Port         string                `yaml:"port" env:"POSTGRES_PORT" env-required:"true"`
 	DatabaseName string                `yaml:"database_name" env:"POSTGRES_DATABASE_NAME" env-required:"true"`
@@ -23,6 +25,12 @@ type Storage struct {
 
 type Migration struct {
 	MigrationsPath string `yaml:"migrations_path" env:"MIGRATIONS_PATH" env-required:"true"`
+}
+
+type Shortener struct {
+	Port     string `yaml:"port" env:"SHORTENER_PORT" env-default:"8080"`
+	Alphabet string `yaml:"alphabet" env:"ALPHABET" env-required:"true"`
+	Length   uint64 `yaml:"length" env:"LENGTH" env-required:"true"`
 }
 
 func NewConfig(filePath string) (*Config, error) {
