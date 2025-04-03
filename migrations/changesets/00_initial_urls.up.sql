@@ -1,6 +1,9 @@
 CREATE TABLE urls (
     id BIGSERIAL PRIMARY KEY,
-    url TEXT NOT NULL
+    url TEXT NOT NULL,
+    short_url TEXT UNIQUE
 );
 
 ALTER SEQUENCE urls_id_seq MINVALUE 0 RESTART WITH 0;
+
+CREATE INDEX idx_url_hash ON urls USING HASH (url);

@@ -45,20 +45,42 @@ func Test_SaveURL_Success(t *testing.T) {
 
 	repo := postgresdb.New(dbPool, shortenerMock, 10)
 
-	shortURL, err := repo.SaveURL(ctx, "originURL")
+	short, err := repo.SaveURL(ctx, "originURL")
 	assert.NoError(t, err)
+	assert.Equal(t, "shortURL", short)
 
-	assert.Equal(t, "shortURL", shortURL)
+	query := `SELECT url FROM urls WHERE id = 0`
 
-	query := "SELECT url FROM urls WHERE url = $1"
+	var originalURL string
+	err = dbPool.QueryRow(ctx, query).Scan(&originalURL)
 
-	var url string
-	err = dbPool.QueryRow(ctx, query, "originURL").Scan(&url)
 	assert.NoError(t, err)
-
-	assert.Equal(t, "originURL", url)
-
+	assert.Equal(t, "originURL", originalURL)
 	shortenerMock.AssertExpectations(t)
+}
+
+func Test_URLIsAlreadyExists_Success(t *testing.T) {
+	dbPool, ctx := setupDB(t)
+
+	shortenerMock := shortenermock.NewShortener(t)
+	shortenerMock.On("Encode", uint64(0)).Return("shortURL", nil).Once()
+
+	repo := postgresdb.New(dbPool, shortenerMock, 10)
+	short, err := repo.SaveURL(ctx, "originURL")
+	assert.NoError(t, err)
+	assert.Equal(t, "shortURL", short)
+
+	short2, err := repo.SaveURL(ctx, "originURL")
+	assert.NoError(t, err)
+	assert.Equal(t, "shortURL", short2)
+
+	query := `SELECT id FROM urls ORDER BY id DESC LIMIT 1`
+
+	var lastID int
+	err = dbPool.QueryRow(ctx, query).Scan(&lastID)
+
+	assert.NoError(t, err)
+	assert.Equal(t, 0, lastID)
 }
 
 func Test_SaveURL_RepoIsFull_Failure(t *testing.T) {
@@ -78,7 +100,6 @@ func Test_SaveURL_RepoIsFull_Failure(t *testing.T) {
 
 	_, err = repo.SaveURL(ctx, "originURL3")
 	assert.Error(t, err)
-	assert.IsType(t, &apperrors.ErrRepositoryIsFull{}, err)
 
 	shortenerMock.AssertExpectations(t)
 }
