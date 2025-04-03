@@ -3,41 +3,51 @@ package inmemoryrepo
 import (
 	"context"
 	"sync"
-	"sync/atomic"
 
 	"github.com/AFK068/compressor/internal/domain"
 	"github.com/AFK068/compressor/internal/domain/apperrors"
+	rbt "github.com/emirpasic/gods/trees/redblacktree"
 )
 
 type InMemoryRepository struct {
 	urls      []string
+	urlTree   *rbt.Tree
 	shortener domain.Shortener
-	counter   atomic.Uint64
+	counter   uint64
 	mu        sync.Mutex
+	maxSize   uint64
 }
 
 func New(shortener domain.Shortener, maxSize uint64) *InMemoryRepository {
 	return &InMemoryRepository{
 		urls:      make([]string, maxSize),
 		shortener: shortener,
+		urlTree:   rbt.NewWithStringComparator(),
+		maxSize:   maxSize,
 	}
 }
 
 func (r *InMemoryRepository) SaveURL(_ context.Context, originalURL string) (string, error) {
-	id := r.counter.Add(1) - 1
+	r.mu.Lock()
+	defer r.mu.Unlock()
 
-	if id >= uint64(len(r.urls)) {
+	if val, ok := r.urlTree.Get(originalURL); ok {
+		return val.(string), nil
+	}
+
+	if r.counter >= r.maxSize {
 		return "", &apperrors.ErrRepositoryIsFull{Message: "repository is full"}
 	}
 
-	shortenedURL, err := r.shortener.Encode(id)
+	shortenedURL, err := r.shortener.Encode(r.counter)
 	if err != nil {
 		return "", err
 	}
 
-	r.mu.Lock()
-	r.urls[id] = originalURL
-	r.mu.Unlock()
+	r.urls[r.counter] = originalURL
+	r.urlTree.Put(originalURL, shortenedURL)
+
+	r.counter++
 
 	return shortenedURL, nil
 }

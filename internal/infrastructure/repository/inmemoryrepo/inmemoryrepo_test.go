@@ -29,6 +29,23 @@ func Test_SaveURL_Success(t *testing.T) {
 	shortenerMock.AssertExpectations(t)
 }
 
+func Test_SaveURL_AlreadyExists_Success(t *testing.T) {
+	shortenerMock := shortenermock.NewShortener(t)
+	repo := inmemoryrepo.New(shortenerMock, 10)
+
+	shortenerMock.On("Encode", uint64(0)).Return("shortenedURL", nil).Once()
+
+	shortURL, err := repo.SaveURL(context.Background(), "http://example.com")
+	assert.NoError(t, err)
+	assert.Equal(t, "shortenedURL", shortURL)
+
+	shortURL2, err := repo.SaveURL(context.Background(), "http://example.com")
+	assert.NoError(t, err)
+	assert.Equal(t, "shortenedURL", shortURL2)
+
+	shortenerMock.AssertExpectations(t)
+}
+
 func Test_SaveURL_RepoIsFull_Failure(t *testing.T) {
 	shortenerMock := shortenermock.NewShortener(t)
 	repo := inmemoryrepo.New(shortenerMock, 1)
