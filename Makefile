@@ -6,7 +6,7 @@ lint:
 imports:
 	@goimports-reviser -project-name github.com/AFK068/bot -file-path ./... -separate-named
 
-.PHONY: generate
+.PHONY: generate_openapi
 generate_openapi:
 	@mkdir -p internal/api/openapi/compressor/v1
 	@oapi-codegen -package v1 \
