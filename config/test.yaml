@@ -1,8 +1,12 @@
+shortener:
+    port: "8080"
+    alphabet: "abs"
+    length: 10
 storage:
     type: "postgres"
     host: "localhost"
     port: "5432"
-    database_name: "scrapper"
+    database_name: "compressor"
     user: "postgres"
     password: "password"
 migrations:
