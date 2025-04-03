@@ -5,7 +5,7 @@ shortener:
 storage:
     type: "inmemory"
     max_size: 3e9
-    host: "localhost"
+    host: "postgresql"
     port: "5432"
     database_name: "compressor"
     user: "postgres"
