@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  compressor:
+    container_name: compressor
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "./wait-for-postgres.sh postgresql; ./compressor"
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      STORAGE_TYPE: ${STORAGE_TYPE}
+    depends_on:
+      - postgresql
+    networks:
+      - backend
+
+  postgresql:
+    container_name: postgresql
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: compressor
+    ports:
+      - "5432:5432"
+    restart: on-failure
+    networks:
+      - backend
+
+networks:
+  backend:
