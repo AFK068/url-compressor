@@ -5,6 +5,7 @@ import (
 
 	"github.com/AFK068/compressor/internal/domain"
 	"github.com/AFK068/compressor/internal/domain/apperrors"
+	"github.com/AFK068/compressor/pkg/txs"
 	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -25,6 +26,8 @@ func New(pool *pgxpool.Pool, shortener domain.Shortener, maxSize uint64) *Postgr
 }
 
 func (r *PostgresRepository) SaveURL(ctx context.Context, originalURL string) (string, error) {
+	querier := txs.GetQuerier(ctx, r.pool)
+
 	query, args, err := squirrel.Insert("urls").
 		Columns("url").
 		Values(originalURL).
@@ -37,7 +40,7 @@ func (r *PostgresRepository) SaveURL(ctx context.Context, originalURL string) (s
 
 	var id uint64
 
-	err = r.pool.QueryRow(ctx, query, args...).Scan(&id)
+	err = querier.QueryRow(ctx, query, args...).Scan(&id)
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			return "", &apperrors.ErrRepositoryIsFull{Message: "repository is full"}
