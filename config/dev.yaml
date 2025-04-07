@@ -1,0 +1,14 @@
+shortener:
+    port: "8080"
+    alphabet: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
+    length: 10
+storage:
+    type: "inmemory"
+    max_size: 3e9
+    host: "postgresql"
+    port: "5432"
+    database_name: "compressor"
+    user: "postgres"
+    password: ${POSTGRES_PASSWORD}
+migrations:
+    migrations_path: "migrations/changesets"

@@ -1,0 +1,79 @@
+openapi: 3.0.0
+info:
+  title: Compressor API
+  version: 1.0.0
+  contact:
+    name: Ivan
+    url: https://github.com/AFK068
+paths:
+  /url:
+    get:
+      summary: Get original URL by short URL
+      parameters:
+        - name: short-url
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Url successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UrlResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Url not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    post:
+      summary: Post original URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddUrlRequest'
+      responses:
+        '200':
+          description: Url successfully saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UrlResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'  
+          
+components:
+  schemas:
+    UrlResponse:
+      type: object
+      properties:
+        url:
+          type: string
+    AddUrlRequest:
+      type: object
+      properties:
+        url:
+          type: string
+    ApiErrorResponse:
+      type: object
+      properties:
+        description:
+          type: string
+        code:
+          type: string
+        exceptionMessage:
+          type: string
